@@ -1,4 +1,4 @@
-module github.com/taka
+module github.com/butters-mars/taka
 
 go 1.12
 
