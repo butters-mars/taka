@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package def;
+
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+
+enum CountType {
+    CountBoth = 0;
+    CountFromEnd = 1;
+    CountToEnd = 2;
+    CountNone = 3;
+}
+
+enum State {
+    StateDeleted = 0;
+    StatePrivate = 1;
+    State1 = 2;
+    State2 = 3;
+    State3 = 4;
+    StateFriend = 5;
+    StatePublic = 6;
+}
+
+message RType {
+    string from = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string to = 2 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string verb = 3 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    bool   multiple = 4;
+    CountType countType = 5;
+}
+
+message EType {
+    string name = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+}
+
+message E {
+    string Type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string ID = 2;
+    string ID1 = 3;
+    string ID2 = 4;
+    string ID3 = 5;
+    int64 CTime = 6;
+    int64 UTime = 7;
+    State State = 8;
+    repeated string Tags = 9;
+    map<string, string> Meta = 10;
+    map<string, string> Content= 11;
+    int64 Score = 12;
+    int64 Score1 = 13;
+    repeated string Resources = 14;
+}
+
+message DefineETypeReq {
+    EType eType = 1;
+    repeated RType creationRTypes = 2;
+}
+
+message CreateEWithRsReq {
+    E e = 1;
+    repeated E related = 2;
+}
+
+message RelationReq {
+    E from = 1;
+    E to = 2;
+    string verb = 3  [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+}
+
+message GetByIDsReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    repeated string ids = 2;
+}
+
+message EList {
+    repeated E list = 1;
+}
+
+message Empty {
+}
+
+message HasRelationResp {
+    bool has = 1;
+}
+
+enum Op {
+    Eq = 0;
+    Gt = 1;
+    Ge = 2;
+    Lt = 3;
+    Le = 4;
+    Ne = 5;
+    In = 6;
+}
+
+enum UpdateAction {
+    Set = 0;
+    Incr = 1;
+    Add = 2;
+    Remove = 3;
+}
+
+enum ValueType {
+    String = 0;
+    Int64 = 1;
+    Int = 2;
+    Double = 3;
+    Bool = 4;
+    Bytes = 5;
+}
+
+message Query {
+    string Field = 1  [(validate.rules).string.min_len = 1];
+    Op Op = 2;
+    string Value = 3;
+    ValueType ValueType = 4;
+}
+
+enum SortDir {
+    Asc = 0;
+    Desc = 1;
+}
+
+message Limit {
+    string From = 1;
+    int32 Limit = 2;
+}
+
+message Update {
+    string Field = 1 [(validate.rules).string.min_len = 1];
+    UpdateAction Action = 2;
+    string Value = 3;
+    ValueType ValueType = 4;
+}
+
+message Paged {
+    repeated E List = 1;
+    bool HasMore = 2;
+    string NextFrom = 3;
+}
+
+message PagedIDs {
+    repeated string List = 1;
+    bool HasMore = 2;
+    string NextFrom = 3;
+}
+
+message CountByState {
+    map<string, int64> counts = 1;
+}
+
+message Counts {
+    map<string, CountByState> counts = 1;
+}
+
+message HasRelationsReq {
+    E from = 1;
+    E to = 2;
+    repeated string relations = 3;
+}
+
+message HasRelations {
+    map<string, bool> relations = 1;
+}
+
+message GetRelationReq {
+    E from = 1;
+    string relation = 2;
+    Limit limit = 3;
+}
+
+message EX {
+    E entity = 1;
+    repeated EX related = 2;
+    repeated E resources = 3;
+    Counts counts = 4;
+    HasRelations hasRelations = 5;
+    map<string, EXPaged> children = 6;
+}
+
+message EXPaged {
+    repeated EX List = 1;
+    bool HasMore = 2;
+    string NextFrom = 3;
+}
+
+message EXList {
+    repeated EX List = 1;
+}
+
+message GetByQueryReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    repeated Query queries = 2;
+    map<string, SortDir> sorts = 3;
+    Limit limit = 4;
+}
+
+message UpdateContentReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string id = 2 [(validate.rules).string.min_len = 1];
+    repeated Update updates = 3;
+}
+
+message SetStateReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    repeated string ids = 2 [(validate.rules).repeated.items.string.min_len = 1];
+    State state = 3;
+}
+
+message DeleteReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    repeated string ids = 2 [(validate.rules).repeated.items.string.min_len = 1];
+}
+
+message GetCountsReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string id = 2 [(validate.rules).string.min_len = 1];
+}
+
+service Storage {
+    rpc defineEType(DefineETypeReq) returns (Empty);
+    rpc defineRType(RType) returns (Empty);
+
+    rpc create(CreateEWithRsReq) returns (E);
+    rpc createRelation(RelationReq) returns (Empty);
+    rpc removeRelation(RelationReq) returns (Empty);
+    rpc hasRelations(HasRelationsReq) returns (HasRelations);
+    rpc getRelation(GetRelationReq) returns (PagedIDs);
+
+    rpc getByIds(GetByIDsReq) returns (EList);
+    rpc getByQuery(GetByQueryReq) returns (Paged);
+    rpc updateContent(UpdateContentReq) returns (Empty);
+    rpc setState(SetStateReq) returns (Empty);
+    rpc delete(DeleteReq) returns (Empty);
+
+    rpc getCounts(GetCountsReq) returns (Counts);
+}
