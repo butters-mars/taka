@@ -13,7 +13,7 @@ if [ "" == "$OUT" ]; then
 fi
 
 echo "cleanup $OUT ..."
-rm $OUT/*.go
+rm $OUT/*.pb*.go
 rm $OUT/*.js
 #rm $OUT/*.dart
 rm $OUT/*.swagger.json

@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package def;
+
+import "def.proto";
+
+enum QueryType {
+    One = 0;
+    ByIds = 1;
+    Paging = 2;
+}
+
+message PopulationOption {
+    map<int32, string> related = 1;
+    bool withCounts = 2;
+    bool withResources = 3;
+    def.E hasRelationsWith = 4;
+    repeated string hasRelationsOf = 5;
+}
+
+message EntityQuery {
+    QueryType qt = 1;
+    string type = 2;
+    string id = 3;
+    repeated string ids = 4;
+    PopulationOption popOp = 5;
+    def.EX user = 6;
+    string action = 7;
+    repeated def.Query queries = 8;
+    map<string, def.SortDir> sorts = 9;
+    string fromID = 10;
+    int32 withLimit = 11;
+}
+
+message EntityCreate {
+    string type = 1;
+    def.E e_ = 2;
+    repeated def.EX related_ = 3;
+    repeated def.E resources_ = 4;
+    def.EX user = 5;
+    string action = 6;
+}
+
+message RelationQuery {
+    string type = 1;
+    def.EX ofID = 2;
+    string relation = 3;
+    def.EX user = 4;
+    PopulationOption popOp = 5;
+    string fromID = 6;
+    int32 withLimit = 7;
+}
+
+message RelationCreate {
+    def.EX from_ = 1;
+    def.EX to_ = 2;
+    string verb_ = 3;
+    def.EX user = 4;
+    bool isAdd_ = 5;
+}
+
+service DSL {
+    rpc one(EntityQuery) returns (def.EX);
+    rpc ids(EntityQuery) returns (def.EXList);
+    rpc paged(EntityQuery) returns (def.EXPaged);
+
+    rpc createEntity(EntityCreate) returns (def.EX);
+
+    rpc queryRelation(RelationQuery) returns (def.EXPaged);
+    rpc createRelation(RelationCreate) returns (def.Empty);
+}
