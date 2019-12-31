@@ -1,5 +1,7 @@
 package storage
 
+import "fmt"
+
 // Obj provides common methods for entity & relation
 type Obj interface {
 	GetId() int64
@@ -9,3 +11,12 @@ type Obj interface {
 	GetCTime() int64
 	GetUTime() int64
 }
+
+var (
+	// ErrUnauthenticated -
+	ErrUnauthenticated = fmt.Errorf("Unauthenticated")
+	// ErrUnauthorized -
+	ErrUnauthorized = fmt.Errorf("Unauthorized")
+	// ErrUnimplemented  -
+	ErrUnimplemented = fmt.Errorf("Unimplemented")
+)
