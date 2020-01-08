@@ -105,6 +105,10 @@ type Storage interface {
 	UpdateContent(ctx context.Context, typ string, id string, updates []Update) error
 	SetState(ctx context.Context, typ string, ids []string, state State) error
 	Delete(ctx context.Context, typ string, ids []string) error
+	SetMeta(ctx context.Context, typ string, id string, meta map[string]string) error
+	DeleteMeta(ctx context.Context, typ string, id string, keys []string) error
+	AddTags(ctx context.Context, typ string, id string, tags []string) error
+	DeleteTags(ctx context.Context, typ string, id string, tags []string) error
 
 	GetCounts(ctx context.Context, typ string, id string) (Counts, error)
 }

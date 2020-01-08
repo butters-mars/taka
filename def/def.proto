@@ -216,6 +216,24 @@ message GetCountsReq {
     string id = 2 [(validate.rules).string.min_len = 1];
 }
 
+message SetMetaReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string id = 2 [(validate.rules).string.min_len = 1];
+    map<string, string> meta = 3;
+}
+
+message DeleteMetaReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string id = 2 [(validate.rules).string.min_len = 1];
+    repeated string keys = 3;
+}
+
+message UpdateTagsReq {
+    string type = 1 [(validate.rules).string.pattern = "^[a-z][a-z0-9]{1,14}$"];
+    string id = 2 [(validate.rules).string.min_len = 1];
+    repeated string tags = 3;
+}
+
 service Storage {
     rpc defineEType(DefineETypeReq) returns (Empty);
     rpc defineRType(RType) returns (Empty);
@@ -231,6 +249,10 @@ service Storage {
     rpc updateContent(UpdateContentReq) returns (Empty);
     rpc setState(SetStateReq) returns (Empty);
     rpc delete(DeleteReq) returns (Empty);
+    rpc setMeta(SetMetaReq) returns (Empty);
+	rpc deleteMeta(DeleteMetaReq) returns (Empty);
+	rpc addTags(UpdateTagsReq) returns (Empty);
+	rpc deleteTags(UpdateTagsReq) returns (Empty);
 
     rpc getCounts(GetCountsReq) returns (Counts);
 }

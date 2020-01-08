@@ -2337,3 +2337,247 @@ var _ interface {
 } = GetCountsReqValidationError{}
 
 var _GetCountsReq_Type_Pattern = regexp.MustCompile("^[a-z][a-z0-9]{1,14}$")
+
+// Validate checks the field values on SetMetaReq with the rules defined in the
+// proto definition for this message. If any rules are violated, an error is returned.
+func (m *SetMetaReq) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if !_SetMetaReq_Type_Pattern.MatchString(m.GetType()) {
+		return SetMetaReqValidationError{
+			field:  "Type",
+			reason: "value does not match regex pattern \"^[a-z][a-z0-9]{1,14}$\"",
+		}
+	}
+
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		return SetMetaReqValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+	}
+
+	// no validation rules for Meta
+
+	return nil
+}
+
+// SetMetaReqValidationError is the validation error returned by
+// SetMetaReq.Validate if the designated constraints aren't met.
+type SetMetaReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SetMetaReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SetMetaReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SetMetaReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SetMetaReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SetMetaReqValidationError) ErrorName() string { return "SetMetaReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SetMetaReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSetMetaReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SetMetaReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SetMetaReqValidationError{}
+
+var _SetMetaReq_Type_Pattern = regexp.MustCompile("^[a-z][a-z0-9]{1,14}$")
+
+// Validate checks the field values on DeleteMetaReq with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *DeleteMetaReq) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if !_DeleteMetaReq_Type_Pattern.MatchString(m.GetType()) {
+		return DeleteMetaReqValidationError{
+			field:  "Type",
+			reason: "value does not match regex pattern \"^[a-z][a-z0-9]{1,14}$\"",
+		}
+	}
+
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		return DeleteMetaReqValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+	}
+
+	return nil
+}
+
+// DeleteMetaReqValidationError is the validation error returned by
+// DeleteMetaReq.Validate if the designated constraints aren't met.
+type DeleteMetaReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteMetaReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteMetaReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteMetaReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteMetaReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteMetaReqValidationError) ErrorName() string { return "DeleteMetaReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DeleteMetaReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteMetaReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteMetaReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteMetaReqValidationError{}
+
+var _DeleteMetaReq_Type_Pattern = regexp.MustCompile("^[a-z][a-z0-9]{1,14}$")
+
+// Validate checks the field values on UpdateTagsReq with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *UpdateTagsReq) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if !_UpdateTagsReq_Type_Pattern.MatchString(m.GetType()) {
+		return UpdateTagsReqValidationError{
+			field:  "Type",
+			reason: "value does not match regex pattern \"^[a-z][a-z0-9]{1,14}$\"",
+		}
+	}
+
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		return UpdateTagsReqValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+	}
+
+	return nil
+}
+
+// UpdateTagsReqValidationError is the validation error returned by
+// UpdateTagsReq.Validate if the designated constraints aren't met.
+type UpdateTagsReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateTagsReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateTagsReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateTagsReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateTagsReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateTagsReqValidationError) ErrorName() string { return "UpdateTagsReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UpdateTagsReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateTagsReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateTagsReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateTagsReqValidationError{}
+
+var _UpdateTagsReq_Type_Pattern = regexp.MustCompile("^[a-z][a-z0-9]{1,14}$")
