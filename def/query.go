@@ -99,3 +99,10 @@ func (q *EntityQuery) Sort(field string, dir SortDir) *EntityQuery {
 	q.Sorts[field] = dir
 	return q
 }
+
+// ID -
+func (q *EntityQuery) ID(id string) *EntityQuery {
+	q.Id = id
+	q.Qt = QueryType_One
+	return q
+}
