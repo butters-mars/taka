@@ -73,3 +73,9 @@ func (u *EntityUpdate) Remove(field string, value interface{}, typ ValueType) *E
 
 	return u
 }
+
+// Updates -
+func (u *EntityUpdate) WithUpdates(updates []*Update) *EntityUpdate {
+	u.Updates = append(u.Updates, updates...)
+	return u
+}
