@@ -73,6 +73,7 @@ service DSL {
     rpc paged(EntityQuery) returns (def.EXPaged);
 
     rpc createEntity(EntityCreate) returns (def.EX);
+    rpc updateEntity(EntityUpdate) returns (def.EX);
 
     rpc queryRelation(RelationQuery) returns (def.EXPaged);
     rpc createRelation(RelationCreate) returns (def.Empty);
