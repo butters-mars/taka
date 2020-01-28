@@ -70,20 +70,7 @@ func (q *EntityQuery) Limit(limit int32) *EntityQuery {
 
 // Where -
 func (q *EntityQuery) Where(field string, op Op, val interface{}, typ ValueType) *EntityQuery {
-	s := ""
-	switch typ {
-	case ValueType_Int, ValueType_Int64:
-		s = fmt.Sprintf("%d", val)
-	case ValueType_Double:
-		s = fmt.Sprintf("%f", val)
-	case ValueType_Bool:
-		s = fmt.Sprintf("%t", val)
-	case ValueType_Bytes, ValueType_String:
-		s = fmt.Sprintf("%s", val)
-	default:
-		s = fmt.Sprintf("%v", val)
-	}
-
+	s := toString(val, typ)
 	qry := &Query{
 		Field:     field,
 		Op:        op,
@@ -105,4 +92,22 @@ func (q *EntityQuery) ID(id string) *EntityQuery {
 	q.Id = id
 	q.Qt = QueryType_One
 	return q
+}
+
+func toString(val interface{}, typ ValueType) string {
+	s := ""
+	switch typ {
+	case ValueType_Int, ValueType_Int64:
+		s = fmt.Sprintf("%d", val)
+	case ValueType_Double:
+		s = fmt.Sprintf("%f", val)
+	case ValueType_Bool:
+		s = fmt.Sprintf("%t", val)
+	case ValueType_Bytes, ValueType_String:
+		s = fmt.Sprintf("%s", val)
+	default:
+		s = fmt.Sprintf("%v", val)
+	}
+
+	return s
 }

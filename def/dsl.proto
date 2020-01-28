@@ -41,6 +41,14 @@ message EntityCreate {
     string action = 6;
 }
 
+message EntityUpdate {
+    string type = 1;
+    string ofID = 2;
+    repeated Update updates = 3;
+    def.EX user = 4;
+    string action = 5;
+}
+
 message RelationQuery {
     string type = 1;
     def.EX ofID = 2;
