@@ -19,6 +19,20 @@ func (u *EntityUpdate) Of(id string) *EntityUpdate {
 	return u
 }
 
+// Of -
+func (u *EntityUpdate) Where(field string, op Op, val interface{}, typ ValueType) *EntityUpdate {
+	s := toString(val, typ)
+	qry := &Query{
+		Field:     field,
+		Op:        op,
+		Value:     s,
+		ValueType: typ,
+	}
+	u.Queries = append(u.Queries, qry)
+
+	return u
+}
+
 // Can -
 func (u *EntityUpdate) Can(user *EX, action string) *EntityUpdate {
 	u.User = user

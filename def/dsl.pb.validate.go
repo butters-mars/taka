@@ -359,6 +359,21 @@ func (m *EntityUpdate) Validate() error {
 
 	// no validation rules for OfID
 
+	for idx, item := range m.GetQueries() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return EntityUpdateValidationError{
+					field:  fmt.Sprintf("Queries[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	for idx, item := range m.GetUpdates() {
 		_, _ = idx, item
 
