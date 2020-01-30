@@ -2,11 +2,23 @@ package def
 
 import (
 	fmt "fmt"
+	"strings"
 )
+
+var opMap = map[Op]string{
+	Op_Eq: "==",
+	Op_Lt: "<",
+	Op_Gt: ">",
+	Op_Le: "<=",
+	Op_Ge: ">=",
+	Op_Ne: "!=",
+	Op_In: "IN",
+}
 
 // Q creates an entity query instance
 func Q() *EntityQuery {
 	return &EntityQuery{
+		Qt:    QueryType_Paging,
 		PopOp: &PopulationOption{},
 	}
 }
@@ -110,4 +122,73 @@ func toString(val interface{}, typ ValueType) string {
 	}
 
 	return s
+}
+
+func (q *EntityQuery) ToSQL() string {
+	var buf strings.Builder
+
+	buf.WriteString("SELECT FROM ")
+	buf.WriteString(q.Type)
+	buf.WriteString(" ")
+
+	if q.Qt == QueryType_Paging {
+		first := true
+		for _, q := range q.Queries {
+			if first {
+				buf.WriteString("WHERE ")
+				first = false
+			} else {
+				buf.WriteString("AND ")
+			}
+
+			key := strings.ToLower(q.Field)
+			buf.WriteString(key)
+			buf.WriteString(" ")
+			buf.WriteString(opMap[q.Op])
+			buf.WriteString(" ")
+			buf.WriteString(fmt.Sprintf("%v", q.Value))
+			buf.WriteString(" ")
+		}
+
+		if len(q.Sorts) > 0 {
+			buf.WriteString("ORDER BY ")
+		}
+
+		for k, dir := range q.Sorts {
+			d := "ASC"
+			_dir := 1
+			if dir == SortDir_Desc {
+				d = "DESC"
+				_dir = -1
+			}
+
+			if first {
+				first = false
+			} else {
+			}
+
+			key := strings.ToLower(k)
+			if _dir == -1 {
+				key = fmt.Sprintf("-%s", key)
+			}
+
+			buf.WriteString(strings.ToLower(k))
+			buf.WriteString(" ")
+			buf.WriteString(d)
+			buf.WriteString(" ")
+		}
+
+		buf.WriteString("LIMIT ")
+		buf.WriteString(fmt.Sprintf("%d", q.WithLimit))
+		buf.WriteString(" ")
+	} else if q.Qt == QueryType_One {
+		buf.WriteString("WHERE id = ")
+		buf.WriteString(q.Id)
+	} else if q.Qt == QueryType_ByIds {
+		buf.WriteString("WHERE id IN (")
+		buf.WriteString(strings.Join(q.Ids, ","))
+		buf.WriteString(")")
+	}
+
+	return buf.String()
 }
