@@ -347,6 +347,117 @@ var _ interface {
 	ErrorName() string
 } = EntityCreateValidationError{}
 
+// Validate checks the field values on EntityUpdate with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *EntityUpdate) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Type
+
+	// no validation rules for OfID
+
+	for idx, item := range m.GetQueries() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return EntityUpdateValidationError{
+					field:  fmt.Sprintf("Queries[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetUpdates() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return EntityUpdateValidationError{
+					field:  fmt.Sprintf("Updates[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EntityUpdateValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Action
+
+	return nil
+}
+
+// EntityUpdateValidationError is the validation error returned by
+// EntityUpdate.Validate if the designated constraints aren't met.
+type EntityUpdateValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EntityUpdateValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EntityUpdateValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EntityUpdateValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EntityUpdateValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EntityUpdateValidationError) ErrorName() string { return "EntityUpdateValidationError" }
+
+// Error satisfies the builtin error interface
+func (e EntityUpdateValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEntityUpdate.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EntityUpdateValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EntityUpdateValidationError{}
+
 // Validate checks the field values on RelationQuery with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
 // is returned.

@@ -41,6 +41,15 @@ message EntityCreate {
     string action = 6;
 }
 
+message EntityUpdate {
+    string type = 1;
+    string ofID = 2;
+    repeated def.Query queries = 3;
+    repeated Update updates = 4;
+    def.EX user = 5;
+    string action = 6;
+}
+
 message RelationQuery {
     string type = 1;
     def.EX ofID = 2;
@@ -65,6 +74,7 @@ service DSL {
     rpc paged(EntityQuery) returns (def.EXPaged);
 
     rpc createEntity(EntityCreate) returns (def.EX);
+    rpc updateEntity(EntityUpdate) returns (def.EX);
 
     rpc queryRelation(RelationQuery) returns (def.EXPaged);
     rpc createRelation(RelationCreate) returns (def.Empty);
