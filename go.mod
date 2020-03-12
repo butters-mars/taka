@@ -7,5 +7,6 @@ require (
 	github.com/casbin/casbin v1.9.1
 	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/golang/protobuf v1.3.2
+	github.com/srikrsna/protoc-gen-gotag v0.5.0
 	google.golang.org/grpc v1.26.0
 )

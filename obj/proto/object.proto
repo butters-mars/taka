@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package obj;
+
+import "google/protobuf/any.proto";
+import "github.com/srikrsna/protoc-gen-gotag/tagger/tagger.proto";
+
+enum State {
+    StateDeleted = 0;
+    StatePrivate = 1;
+    State1 = 2;
+    State2 = 3;
+    State3 = 4;
+    StateFriend = 5;
+    StatePublic = 6;
+}
+
+enum Op {
+    Eq = 0;
+    Gt = 1;
+    Ge = 2;
+    Lt = 3;
+    Le = 4;
+    Ne = 5;
+    In = 6;
+}
+
+enum UpdateAction {
+    Set = 0;
+    Incr = 1;
+    Add = 2;
+    Remove = 3;
+}
+
+enum ValueType {
+    String = 0;
+    Int64 = 1;
+    Int = 2;
+    Double = 3;
+    Bool = 4;
+    Bytes = 5;
+}
+
+message Query {
+    string Field = 1;  //[(validate.rules).string.min_len = 1];
+    Op Op = 2;
+    string Value = 3;
+    ValueType ValueType = 4;
+}
+
+message Update {
+    string Field = 1; //[(validate.rules).string.min_len = 1];
+    UpdateAction Action = 2;
+    string Value = 3;
+    ValueType ValueType = 4;
+}
+
+enum SortDir {
+    Asc = 0;
+    Desc = 1;
+}
+
+message Sort {
+    string field = 1;
+    SortDir dir = 2;
+}
+
+message Limit {
+    string from = 1;
+    int32 limit = 2;
+    int32 page = 3;
+}
+
+message Count {
+    map<string, int64> counts = 1;
+}
+
+message Resource {
+    int64 id = 1 [(tagger.tags) = "bson:\"_id\"" ];
+    int64 ct = 2;
+    int64 ut = 3;
+    int32 state = 4;
+    string type = 5;
+    map<string, string> meta = 6;
+    map<string, string> urls = 7;
+}
+
+message IDReq {
+    int64 id = 1;
+    string type = 2;
+}
+
+message IDsReq {
+    repeated int64 ids = 1;
+    string type = 2;
+}
+
+message Empty {
+}
+
+message StateReq {
+    int64 id = 1;
+    State state = 2;
+    string type = 3;
+}
+
+message UpdateReq {
+    Query query = 1;
+    repeated Update updates = 2;
+    string type = 3;
+}
+
+message QueryReq {
+    repeated Query queries = 1;
+    repeated Sort sorts = 2;
+    Limit limit = 3;
+    string type = 4;
+}
+
+message IncrCountReq {
+    int64 id = 1;
+    map<string, int64> delta = 2;
+    string type = 3;
+    State state = 4;
+}
+
+message RelationReq {
+    int64 id = 1;
+    int64 to = 2;
+    string relation = 3;
+    string type = 4;
+    State state = 5;
+}
+
+message RelatedReq {
+    int64 id = 1;
+    string relation = 3;
+    string type = 4;
+    Limit limit = 5;
+    Sort sort = 6;
+    //repeated State inStates = 6;
+}
+
+message One {
+    string type = 1;
+    google.protobuf.Any obj = 2;
+}
+
+message List {
+    repeated google.protobuf.Any list = 1;
+    bool more = 2;
+    string type = 3;
+}
+
+message IDList {
+    repeated int64 list = 1;
+    bool more = 2;
+    string type = 3;
+}
+
+service ObjectService {
+    rpc create(One) returns (One);
+    rpc update(UpdateReq) returns (Empty);
+    rpc getByID(IDReq) returns (One);
+    rpc getByIDs(IDsReq) returns (List);
+    rpc getOneByQuery(QueryReq) returns (One);
+    rpc getByQuery(QueryReq) returns (List);
+    rpc deleteByID(IDReq) returns (Empty);
+
+    rpc setState(StateReq) returns (Empty);
+
+    rpc getCount(IDReq) returns (Count);
+    rpc incrCount(IncrCountReq) returns (Empty);
+    rpc addRelation(RelationReq) returns (Empty);
+    rpc removeRelation(RelationReq) returns (Empty);
+    rpc getRelated(RelatedReq) returns (IDList);
+}
