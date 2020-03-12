@@ -1,6 +1,12 @@
 package storage
 
-import "context"
+// Model defines model to be stored
+type Model interface {
+	GetId() int64
+	GetCt() int64
+	GetUt() int64
+	GetState() int32
+}
 
 // Op defines comparison operators
 type Op int
@@ -36,11 +42,6 @@ const (
 	Remove
 )
 
-const (
-	// TypeMissing representing nil entity
-	TypeMissing = "MISSING"
-)
-
 // Query defines query
 type Query struct {
 	Field string      `json:"field"`
@@ -58,10 +59,17 @@ const (
 	Desc
 )
 
+// Sort -
+type Sort struct {
+	Field string
+	Dir   SortDir
+}
+
 // Limit query limit
 type Limit struct {
 	From  interface{}
 	Limit int
+	Page  int
 }
 
 // Update -
@@ -71,25 +79,33 @@ type Update struct {
 	Value  interface{}
 }
 
-// Paged represents paged query result
-type Paged struct {
-	List     []*E
-	HasMore  bool
-	NextFrom *E
+// Service defines methods of a storage
+type Service interface {
+	Create(typ string, m Model) error
+	Update(typ string, q Query, updates []Update) error
+	GetByID(typ string, id int64, out interface{}) error
+	GetByIDs(typ string, ids []int64, out interface{}) error
+	GetOneByQuery(typ string, qs []Query, obj interface{}) error
+	GetByQuery(typ string, qs []Query, sorts []Sort, limit Limit, slice interface{}) (bool, error)
+	SetState(typ string, id int64, state int32) error
+
+	GetCount(typ string, id int64) (map[string]int64, error)
+	IncrCount(typ string, id int64, delta map[string]int64) error
+	AddRelation(typ string, id, to int64, rel string) error
+	RemoveRelation(typ string, id, to int64, rel string) error
+	GetRelated(typ string, id int64, rel string, limit Limit) ([]int64, error)
+
+	// UpdateByID(id string, update interface{}) error
+	// GetByIDs(ids []int64) ([]Model, error)
+	// GetByQuery()
+	// Delete(m Model) error
+
+	// CreateRelation(m Model, to string, relation string, allowMultiple bool) error
+	// HasRelation(m, Model, to string, relation string) (bool, error)
+	//GetRelated(f Model, relation string, reversed bool)
 }
 
-// PagedIDs represents paged ids query result
-type PagedIDs struct {
-	List     []string
-	HasMore  bool
-	NextFrom string
-}
-
-// Counts -
-type Counts map[string]map[string]int64
-
-// Storage the storage interface
-type Storage interface {
+/*
 	DefineEType(ctx context.Context, etype *EType, creationRTypes []*RType) error
 	DefineRType(ctx context.Context, rtype *RType) error
 
@@ -103,28 +119,31 @@ type Storage interface {
 	GetByQuery(ctx context.Context, typ string, queries []Query, sorts map[string]SortDir, limit Limit) (Paged, error)
 	GetIDsByQuery(ctx context.Context, typ string, queries []Query, sorts map[string]SortDir, limit Limit) (PagedIDs, error)
 	UpdateContent(ctx context.Context, typ string, id string, updates []Update) error
+
 	SetState(ctx context.Context, typ string, ids []string, state State) error
 	Delete(ctx context.Context, typ string, ids []string) error
 	SetMeta(ctx context.Context, typ string, id string, meta map[string]string) error
 	DeleteMeta(ctx context.Context, typ string, id string, keys []string) error
 	AddTags(ctx context.Context, typ string, id string, tags []string) error
 	DeleteTags(ctx context.Context, typ string, id string, tags []string) error
+*/
 
-	GetCounts(ctx context.Context, typ string, id string) (Counts, error)
-}
+/*
+    rpc create(CreateEWithRsReq) returns (E);
+    rpc createRelation(RelationReq) returns (Empty);
+    rpc removeRelation(RelationReq) returns (Empty);
+    rpc hasRelations(HasRelationsReq) returns (HasRelations);
+    rpc getRelation(GetRelationReq) returns (PagedIDs);
 
-// Cache represents cache
-type Cache interface {
-	Add(es []*E) error
-	Remove(es []*E) error
-}
+    rpc getByIds(GetByIDsReq) returns (EList);
+    rpc getByQuery(GetByQueryReq) returns (Paged);
+    rpc updateContent(UpdateContentReq) returns (Empty);
+    rpc setState(SetStateReq) returns (Empty);
+    rpc delete(DeleteReq) returns (Empty);
+    rpc setMeta(SetMetaReq) returns (Empty);
+	rpc deleteMeta(DeleteMetaReq) returns (Empty);
+	rpc addTags(UpdateTagsReq) returns (Empty);
+	rpc deleteTags(UpdateTagsReq) returns (Empty);
 
-// NilOrMissing determines given entity is nil or missing
-func NilOrMissing(e *E) bool {
-	return e == nil || e.Type == "" || e.Type == TypeMissing
-}
-
-// Missing creates an entity representing missing object
-func Missing() *E {
-	return &E{Type: TypeMissing}
-}
+	rpc getCounts(GetCountsReq) returns (Counts);
+*/
