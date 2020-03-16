@@ -444,6 +444,32 @@ func (st *storageImpl) RemoveRelation(ctx context.Context, typ string, id, to in
 	return nil
 }
 
+func (st *storageImpl) HasRelation(ctx context.Context, typ string, id, to int64, rel string) (bool, error) {
+	typ = strings.ToLower(typ)
+	if typ == "" {
+		return false, fmt.Errorf("type not specified")
+	}
+	if rel == "" {
+		return false, fmt.Errorf("relation not specified")
+	}
+
+	ss := st.session.Copy()
+	defer ss.Close()
+
+	col := ss.DB(typ).C(fmt.Sprintf("%s_%s", typ, rel))
+	err := col.Find(bson.M{"id": id, "to": to}).One(&relation{})
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return false, nil
+		}
+
+		logging.WError("fail to check existence", "typ", typ, "id", id, "to", to, "rel", rel, "err", err)
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (st *storageImpl) GetRelated(ctx context.Context, typ string, id int64, rel string, limit storage.Limit) ([]int64, error) {
 	return nil, nil
 }

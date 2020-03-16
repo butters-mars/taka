@@ -95,6 +95,8 @@ type Service interface {
 	IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error
 	AddRelation(ctx context.Context, typ string, id, to int64, rel string) error
 	RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error
+	HasRelation(ctx context.Context, typ string, id, to int64, rel string) (bool, error)
+
 	GetRelated(ctx context.Context, typ string, id int64, rel string, limit Limit) ([]int64, error)
 
 	// UpdateByID(id string, update interface{}) error
