@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"strings"
@@ -54,7 +55,7 @@ func NewStorage(url string) (storage.Service, error) {
 	}, nil
 }
 
-func (st *storageImpl) Create(typ string, m storage.Model) error {
+func (st *storageImpl) Create(ctx context.Context, typ string, m storage.Model) error {
 	ss := st.session.Copy()
 	defer ss.Close()
 
@@ -102,7 +103,7 @@ func (st *storageImpl) Create(typ string, m storage.Model) error {
 	return err
 }
 
-func (st *storageImpl) Update(typ string, q storage.Query, updates []storage.Update) error {
+func (st *storageImpl) Update(ctx context.Context, typ string, q storage.Query, updates []storage.Update) error {
 	if q.Op != storage.Eq {
 		return fmt.Errorf("only eq is supported when update")
 	}
@@ -160,7 +161,7 @@ func (st *storageImpl) Update(typ string, q storage.Query, updates []storage.Upd
 	return nil
 }
 
-func (st *storageImpl) GetByID(typ string, id int64, out interface{}) error {
+func (st *storageImpl) GetByID(ctx context.Context, typ string, id int64, out interface{}) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -180,7 +181,7 @@ func (st *storageImpl) GetByID(typ string, id int64, out interface{}) error {
 	return nil
 }
 
-func (st *storageImpl) GetByIDs(typ string, ids []int64, out interface{}) (err error) {
+func (st *storageImpl) GetByIDs(ctx context.Context, typ string, ids []int64, out interface{}) (err error) {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -207,7 +208,7 @@ func (st *storageImpl) GetByIDs(typ string, ids []int64, out interface{}) (err e
 	return nil
 }
 
-func (st *storageImpl) GetOneByQuery(typ string, qs []storage.Query, obj interface{}) error {
+func (st *storageImpl) GetOneByQuery(ctx context.Context, typ string, qs []storage.Query, obj interface{}) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -228,7 +229,7 @@ func (st *storageImpl) GetOneByQuery(typ string, qs []storage.Query, obj interfa
 	return nil
 }
 
-func (st *storageImpl) GetByQuery(typ string, qs []storage.Query, sorts []storage.Sort, limit storage.Limit, slice interface{}) (bool, error) {
+func (st *storageImpl) GetByQuery(ctx context.Context, typ string, qs []storage.Query, sorts []storage.Sort, limit storage.Limit, slice interface{}) (bool, error) {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return false, fmt.Errorf("type not specified")
@@ -268,7 +269,7 @@ func (st *storageImpl) GetByQuery(typ string, qs []storage.Query, sorts []storag
 	return more, nil
 }
 
-func (st *storageImpl) SetState(typ string, id int64, state int32) error {
+func (st *storageImpl) SetState(ctx context.Context, typ string, id int64, state int32) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -288,7 +289,7 @@ func (st *storageImpl) SetState(typ string, id int64, state int32) error {
 	return nil
 }
 
-func (st *storageImpl) GetCount(typ string, id int64) (map[string]int64, error) {
+func (st *storageImpl) GetCount(ctx context.Context, typ string, id int64) (map[string]int64, error) {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return nil, fmt.Errorf("type not specified")
@@ -313,7 +314,7 @@ func (st *storageImpl) GetCount(typ string, id int64) (map[string]int64, error) 
 	return cs, nil
 }
 
-func (st *storageImpl) IncrCount(typ string, id int64, delta map[string]int64) error {
+func (st *storageImpl) IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -357,7 +358,7 @@ type relation struct {
 	CT int64 `bson:"ct"`
 }
 
-func (st *storageImpl) AddRelation(typ string, id, to int64, rel string) error {
+func (st *storageImpl) AddRelation(ctx context.Context, typ string, id, to int64, rel string) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -400,7 +401,7 @@ func (st *storageImpl) AddRelation(typ string, id, to int64, rel string) error {
 	return nil
 }
 
-func (st *storageImpl) RemoveRelation(typ string, id, to int64, rel string) error {
+func (st *storageImpl) RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -443,7 +444,7 @@ func (st *storageImpl) RemoveRelation(typ string, id, to int64, rel string) erro
 	return nil
 }
 
-func (st *storageImpl) GetRelated(typ string, id int64, rel string, limit storage.Limit) ([]int64, error) {
+func (st *storageImpl) GetRelated(ctx context.Context, typ string, id int64, rel string, limit storage.Limit) ([]int64, error) {
 	return nil, nil
 }
 

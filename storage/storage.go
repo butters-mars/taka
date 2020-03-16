@@ -1,5 +1,7 @@
 package storage
 
+import "context"
+
 // Model defines model to be stored
 type Model interface {
 	GetId() int64
@@ -81,19 +83,19 @@ type Update struct {
 
 // Service defines methods of a storage
 type Service interface {
-	Create(typ string, m Model) error
-	Update(typ string, q Query, updates []Update) error
-	GetByID(typ string, id int64, out interface{}) error
-	GetByIDs(typ string, ids []int64, out interface{}) error
-	GetOneByQuery(typ string, qs []Query, obj interface{}) error
-	GetByQuery(typ string, qs []Query, sorts []Sort, limit Limit, slice interface{}) (bool, error)
-	SetState(typ string, id int64, state int32) error
+	Create(ctx context.Context, typ string, m Model) error
+	Update(ctx context.Context, typ string, q Query, updates []Update) error
+	GetByID(ctx context.Context, typ string, id int64, out interface{}) error
+	GetByIDs(ctx context.Context, typ string, ids []int64, out interface{}) error
+	GetOneByQuery(ctx context.Context, typ string, qs []Query, obj interface{}) error
+	GetByQuery(ctx context.Context, typ string, qs []Query, sorts []Sort, limit Limit, slice interface{}) (bool, error)
+	SetState(ctx context.Context, typ string, id int64, state int32) error
 
-	GetCount(typ string, id int64) (map[string]int64, error)
-	IncrCount(typ string, id int64, delta map[string]int64) error
-	AddRelation(typ string, id, to int64, rel string) error
-	RemoveRelation(typ string, id, to int64, rel string) error
-	GetRelated(typ string, id int64, rel string, limit Limit) ([]int64, error)
+	GetCount(ctx context.Context, typ string, id int64) (map[string]int64, error)
+	IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error
+	AddRelation(ctx context.Context, typ string, id, to int64, rel string) error
+	RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error
+	GetRelated(ctx context.Context, typ string, id int64, rel string, limit Limit) ([]int64, error)
 
 	// UpdateByID(id string, update interface{}) error
 	// GetByIDs(ids []int64) ([]Model, error)
