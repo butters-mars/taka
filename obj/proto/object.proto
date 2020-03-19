@@ -67,8 +67,9 @@ message Sort {
 
 message Limit {
     string from = 1;
-    int32 limit = 2;
-    int32 page = 3;
+    ValueType valueType = 2;
+    int32 limit = 3;
+    int32 page = 4;
 }
 
 message Count {
