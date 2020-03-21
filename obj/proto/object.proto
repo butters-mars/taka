@@ -130,15 +130,39 @@ message RelationReq {
     int64 to = 2;
     string relation = 3;
     string type = 4;
-    State state = 5;
+    string toType = 5;
+    State state = 6;
+}
+
+message RelationWith {
+    int64 id = 1;
+    repeated int64 other = 2;
+    string relation = 3;
+    string type = 4;
+    string otherType = 5;
+    State state = 6;
+    bool reversed = 7;
+}
+message RelationsReq {
+    repeated RelationWith list = 1;
+}
+
+message Relations {
+    repeated bool list = 1;
+}
+
+message RelationsResp {
+    repeated Relations list = 1;
 }
 
 message RelatedReq {
     int64 id = 1;
     string relation = 3;
     string type = 4;
-    Limit limit = 5;
-    Sort sort = 6;
+    string otherType = 5;
+    bool reversed = 6;
+    Limit limit = 7;
+    Sort sort = 8;
     //repeated State inStates = 6;
 }
 
@@ -173,7 +197,10 @@ service ObjectService {
     rpc getCount(IDReq) returns (Count);
     rpc getCounts(IDsReq) returns (List);
     rpc incrCount(IncrCountReq) returns (Empty);
+
     rpc addRelation(RelationReq) returns (Empty);
     rpc removeRelation(RelationReq) returns (Empty);
+    rpc havRelations(RelationsReq) returns (RelationsResp);
+
     rpc getRelated(RelatedReq) returns (IDList);
 }

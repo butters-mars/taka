@@ -400,7 +400,8 @@ type relation struct {
 	CT int64 `bson:"ct"`
 }
 
-func (st *storageImpl) AddRelation(ctx context.Context, typ string, id, to int64, rel string) error {
+func (st *storageImpl) AddRelation(ctx context.Context, r storage.Relation) error {
+	typ, id, to, rel := r.Type, r.ID, r.ToID, r.Relation
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -412,7 +413,7 @@ func (st *storageImpl) AddRelation(ctx context.Context, typ string, id, to int64
 	ss := st.session.Copy()
 	defer ss.Close()
 
-	col := ss.DB(typ).C(fmt.Sprintf("%s_%s", typ, rel))
+	col := ss.DB(typ).C(fmt.Sprintf("%s_%s_%s", typ, rel, r.ToType))
 	err := col.Find(bson.M{"id": id, "to": to}).One(&relation{})
 	if err == nil {
 		return fmt.Errorf("relation %s already exists", rel)
@@ -443,7 +444,8 @@ func (st *storageImpl) AddRelation(ctx context.Context, typ string, id, to int64
 	return nil
 }
 
-func (st *storageImpl) RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error {
+func (st *storageImpl) RemoveRelation(ctx context.Context, r storage.Relation) error {
+	typ, id, to, rel := r.Type, r.ID, r.ToID, r.Relation
 	typ = strings.ToLower(typ)
 	if typ == "" {
 		return fmt.Errorf("type not specified")
@@ -455,7 +457,7 @@ func (st *storageImpl) RemoveRelation(ctx context.Context, typ string, id, to in
 	ss := st.session.Copy()
 	defer ss.Close()
 
-	col := ss.DB(typ).C(fmt.Sprintf("%s_%s", typ, rel))
+	col := ss.DB(typ).C(fmt.Sprintf("%s_%s_%s", typ, rel, r.ToType))
 	err := col.Find(bson.M{"id": id, "to": to}).One(&relation{})
 	if err != nil {
 		if err == mgo.ErrNotFound {
@@ -486,30 +488,57 @@ func (st *storageImpl) RemoveRelation(ctx context.Context, typ string, id, to in
 	return nil
 }
 
-func (st *storageImpl) HasRelation(ctx context.Context, typ string, id, to int64, rel string) (bool, error) {
-	typ = strings.ToLower(typ)
-	if typ == "" {
-		return false, fmt.Errorf("type not specified")
-	}
-	if rel == "" {
-		return false, fmt.Errorf("relation not specified")
-	}
+func (st *storageImpl) HasRelations(ctx context.Context, rs []storage.HasRelation) ([][]bool, error) {
+	result := make([][]bool, len(rs))
 
 	ss := st.session.Copy()
 	defer ss.Close()
 
-	col := ss.DB(typ).C(fmt.Sprintf("%s_%s", typ, rel))
-	err := col.Find(bson.M{"id": id, "to": to}).One(&relation{})
-	if err != nil {
-		if err == mgo.ErrNotFound {
-			return false, nil
+	for _, r := range rs {
+		iType, oType, id, oIDs, rel, reversed :=
+			r.Type, r.OtherType, r.ID, r.OtherIDs, r.Relation, r.Reversed
+
+		idMap := make(map[int64]int)
+		for idx, id := range oIDs {
+			idMap[id] = idx
 		}
 
-		logging.WError("fail to check existence", "typ", typ, "id", id, "to", to, "rel", rel, "err", err)
-		return false, err
+		typ := iType
+		if reversed {
+			typ = oType
+			oType = iType
+		}
+
+		col := ss.DB(typ).C(fmt.Sprintf("%s_%s_%s", typ, rel, oType))
+		var q *mgo.Query
+		if !reversed {
+			q = col.Find(bson.M{"id": id, "to": bson.M{"$in": oIDs}})
+		} else {
+			q = col.Find(bson.M{"to": id, "id": bson.M{"$in": oIDs}})
+		}
+
+		hasRelations := make([]bool, len(oIDs))
+		all := make([]*relation, 0)
+		err := q.All(all)
+		if err != nil {
+			logging.WError("fail to check relations", "itype", iType, "otype", oType, "err", err)
+			result = append(result, hasRelations)
+			continue
+		}
+
+		for _, r := range all {
+			id := r.ID
+			if reversed {
+				id = r.To
+			}
+
+			i := idMap[id]
+			hasRelations[i] = true
+		}
+		result = append(result, hasRelations)
 	}
 
-	return true, nil
+	return result, nil
 }
 
 func (st *storageImpl) GetRelated(ctx context.Context, typ string, id int64, rel string, limit storage.Limit) ([]int64, error) {

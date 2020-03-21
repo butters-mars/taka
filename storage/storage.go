@@ -81,6 +81,23 @@ type Update struct {
 	Value  interface{}
 }
 
+type Relation struct {
+	Type     string
+	ToType   string
+	ID       int64
+	ToID     int64
+	Relation string
+}
+
+type HasRelation struct {
+	Type      string
+	OtherType string
+	ID        int64
+	OtherIDs  []int64
+	Relation  string
+	Reversed  bool
+}
+
 // Service defines methods of a storage
 type Service interface {
 	Create(ctx context.Context, typ string, m Model) error
@@ -94,9 +111,10 @@ type Service interface {
 	GetCount(ctx context.Context, typ string, id int64) (map[string]int64, error)
 	GetCounts(ctx context.Context, typ string, ids []int64) ([]map[string]int64, error)
 	IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error
-	AddRelation(ctx context.Context, typ string, id, to int64, rel string) error
-	RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error
-	HasRelation(ctx context.Context, typ string, id, to int64, rel string) (bool, error)
+
+	AddRelation(ctx context.Context, rel Relation) error
+	RemoveRelation(ctx context.Context, rel Relation) error
+	HasRelations(ctx context.Context, rels []HasRelation) ([][]bool, error)
 
 	GetRelated(ctx context.Context, typ string, id int64, rel string, limit Limit) ([]int64, error)
 
