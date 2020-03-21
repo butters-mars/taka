@@ -92,6 +92,7 @@ type Service interface {
 	SetState(ctx context.Context, typ string, id int64, state int32) error
 
 	GetCount(ctx context.Context, typ string, id int64) (map[string]int64, error)
+	GetCounts(ctx context.Context, typ string, ids []int64) ([]map[string]int64, error)
 	IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error
 	AddRelation(ctx context.Context, typ string, id, to int64, rel string) error
 	RemoveRelation(ctx context.Context, typ string, id, to int64, rel string) error

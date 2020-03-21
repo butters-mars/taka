@@ -314,6 +314,48 @@ func (st *storageImpl) GetCount(ctx context.Context, typ string, id int64) (map[
 	return cs, nil
 }
 
+func (st *storageImpl) GetCounts(ctx context.Context, typ string, ids []int64) ([]map[string]int64, error) {
+	typ = strings.ToLower(typ)
+	if typ == "" {
+		return nil, fmt.Errorf("type not specified")
+	}
+
+	if len(ids) == 0 {
+		return []map[string]int64{}, nil
+	}
+
+	ss := st.session.Copy()
+	defer ss.Close()
+
+	col := ss.DB(typ).C(fmt.Sprintf("%s_%s", typ, colCountsSuffix))
+	cs := make([]map[string]int64, 0)
+	err := col.Find(bson.M{"id": bson.M{"$in": ids}}).All(&cs)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return cs, nil
+		}
+
+		logging.WError("fail to get counts", "type", typ, "id", ids, "err", err)
+		return nil, err
+	}
+
+	logging.WDebug("get counts OK", "type", typ, "ids", ids)
+	idMap := make(map[int64]int)
+	for idx, id := range ids {
+		idMap[id] = idx
+	}
+
+	result := make([]map[string]int64, len(ids))
+	for _, c := range cs {
+		if id, ok := c["_id"]; ok {
+			idx := idMap[id]
+			result[idx] = c
+		}
+	}
+
+	return result, nil
+}
+
 func (st *storageImpl) IncrCount(ctx context.Context, typ string, id int64, delta map[string]int64) error {
 	typ = strings.ToLower(typ)
 	if typ == "" {
