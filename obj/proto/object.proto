@@ -171,6 +171,7 @@ service ObjectService {
     rpc setState(StateReq) returns (Empty);
 
     rpc getCount(IDReq) returns (Count);
+    rpc getCounts(IDsReq) returns (List);
     rpc incrCount(IncrCountReq) returns (Empty);
     rpc addRelation(RelationReq) returns (Empty);
     rpc removeRelation(RelationReq) returns (Empty);
