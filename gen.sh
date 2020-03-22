@@ -1,6 +1,7 @@
 #!/bin/sh
-DIR=$1
-OUT=$2
+cd $1
+DIR=.
+OUT=.
 
 if [ "" == "$DIR" ]; then
     echo "dir is empty"
@@ -45,6 +46,14 @@ protoc -I/usr/local/include -I$DIR \
   --descriptor_set_out $OUT/out.pb \
   $DIR/*.proto 
 
+protoc \
+  -I./$PROTOBUF_IMPORT_DIR \
+  -I /usr/local/include \
+  -I $DIR \
+  -I . \
+  --gotag_out=xxx="bson+\"-\"":$OUT \
+  $DIR/*.proto
+
 echo "generating reverse-proxy ..."
 protoc -I/usr/local/include -I $DIR \
   -I./$PROTOBUF_IMPORT_DIR \
@@ -73,7 +82,5 @@ protoc -I=$DIR \
 rm -rf $PROTOBUF_IMPORT_DIR
 
 echo "go get ."
-D=`pwd`
-cd $OUT
-go get .
-cd $D
+
+mv *.go *.dart ../

@@ -204,9 +204,9 @@ type Query struct {
 	Op                   Op        `protobuf:"varint,2,opt,name=Op,proto3,enum=obj.Op" json:"Op,omitempty"`
 	Value                string    `protobuf:"bytes,3,opt,name=Value,proto3" json:"Value,omitempty"`
 	ValueType            ValueType `protobuf:"varint,4,opt,name=ValueType,proto3,enum=obj.ValueType" json:"ValueType,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-" bson:"-"`
+	XXX_unrecognized     []byte    `json:"-" bson:"-"`
+	XXX_sizecache        int32     `json:"-" bson:"-"`
 }
 
 func (m *Query) Reset()         { *m = Query{} }
@@ -267,9 +267,9 @@ type Update struct {
 	Action               UpdateAction `protobuf:"varint,2,opt,name=Action,proto3,enum=obj.UpdateAction" json:"Action,omitempty"`
 	Value                string       `protobuf:"bytes,3,opt,name=Value,proto3" json:"Value,omitempty"`
 	ValueType            ValueType    `protobuf:"varint,4,opt,name=ValueType,proto3,enum=obj.ValueType" json:"ValueType,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-" bson:"-"`
+	XXX_unrecognized     []byte       `json:"-" bson:"-"`
+	XXX_sizecache        int32        `json:"-" bson:"-"`
 }
 
 func (m *Update) Reset()         { *m = Update{} }
@@ -328,9 +328,9 @@ func (m *Update) GetValueType() ValueType {
 type Sort struct {
 	Field                string   `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
 	Dir                  SortDir  `protobuf:"varint,2,opt,name=dir,proto3,enum=obj.SortDir" json:"dir,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *Sort) Reset()         { *m = Sort{} }
@@ -377,9 +377,9 @@ type Limit struct {
 	ValueType            ValueType `protobuf:"varint,2,opt,name=valueType,proto3,enum=obj.ValueType" json:"valueType,omitempty"`
 	Limit                int32     `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
 	Page                 int32     `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-" bson:"-"`
+	XXX_unrecognized     []byte    `json:"-" bson:"-"`
+	XXX_sizecache        int32     `json:"-" bson:"-"`
 }
 
 func (m *Limit) Reset()         { *m = Limit{} }
@@ -437,9 +437,9 @@ func (m *Limit) GetPage() int32 {
 
 type Count struct {
 	Counts               map[string]int64 `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
-	XXX_unrecognized     []byte           `json:"-"`
-	XXX_sizecache        int32            `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-" bson:"-"`
+	XXX_unrecognized     []byte           `json:"-" bson:"-"`
+	XXX_sizecache        int32            `json:"-" bson:"-"`
 }
 
 func (m *Count) Reset()         { *m = Count{} }
@@ -475,16 +475,16 @@ func (m *Count) GetCounts() map[string]int64 {
 }
 
 type Resource struct {
-	Id                   int64             `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id                   int64             `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
 	Ct                   int64             `protobuf:"varint,2,opt,name=ct,proto3" json:"ct,omitempty"`
 	Ut                   int64             `protobuf:"varint,3,opt,name=ut,proto3" json:"ut,omitempty"`
 	State                int32             `protobuf:"varint,4,opt,name=state,proto3" json:"state,omitempty"`
 	Type                 string            `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	Meta                 map[string]string `protobuf:"bytes,6,rep,name=meta,proto3" json:"meta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	Urls                 map[string]string `protobuf:"bytes,7,rep,name=urls,proto3" json:"urls,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-" bson:"-"`
+	XXX_unrecognized     []byte            `json:"-" bson:"-"`
+	XXX_sizecache        int32             `json:"-" bson:"-"`
 }
 
 func (m *Resource) Reset()         { *m = Resource{} }
@@ -564,9 +564,9 @@ func (m *Resource) GetUrls() map[string]string {
 type IDReq struct {
 	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Type                 string   `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *IDReq) Reset()         { *m = IDReq{} }
@@ -611,9 +611,9 @@ func (m *IDReq) GetType() string {
 type IDsReq struct {
 	Ids                  []int64  `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
 	Type                 string   `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *IDsReq) Reset()         { *m = IDsReq{} }
@@ -690,9 +690,9 @@ type StateReq struct {
 	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	State                State    `protobuf:"varint,2,opt,name=state,proto3,enum=obj.State" json:"state,omitempty"`
 	Type                 string   `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *StateReq) Reset()         { *m = StateReq{} }
@@ -745,9 +745,9 @@ type UpdateReq struct {
 	Query                *Query    `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	Updates              []*Update `protobuf:"bytes,2,rep,name=updates,proto3" json:"updates,omitempty"`
 	Type                 string    `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-" bson:"-"`
+	XXX_unrecognized     []byte    `json:"-" bson:"-"`
+	XXX_sizecache        int32     `json:"-" bson:"-"`
 }
 
 func (m *UpdateReq) Reset()         { *m = UpdateReq{} }
@@ -801,9 +801,9 @@ type QueryReq struct {
 	Sorts                []*Sort  `protobuf:"bytes,2,rep,name=sorts,proto3" json:"sorts,omitempty"`
 	Limit                *Limit   `protobuf:"bytes,3,opt,name=limit,proto3" json:"limit,omitempty"`
 	Type                 string   `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *QueryReq) Reset()         { *m = QueryReq{} }
@@ -864,9 +864,9 @@ type IncrCountReq struct {
 	Delta                map[string]int64 `protobuf:"bytes,2,rep,name=delta,proto3" json:"delta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 	Type                 string           `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
 	State                State            `protobuf:"varint,4,opt,name=state,proto3,enum=obj.State" json:"state,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
-	XXX_unrecognized     []byte           `json:"-"`
-	XXX_sizecache        int32            `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-" bson:"-"`
+	XXX_unrecognized     []byte           `json:"-" bson:"-"`
+	XXX_sizecache        int32            `json:"-" bson:"-"`
 }
 
 func (m *IncrCountReq) Reset()         { *m = IncrCountReq{} }
@@ -929,9 +929,9 @@ type RelationReq struct {
 	Type                 string   `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`
 	ToType               string   `protobuf:"bytes,5,opt,name=toType,proto3" json:"toType,omitempty"`
 	State                State    `protobuf:"varint,6,opt,name=state,proto3,enum=obj.State" json:"state,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *RelationReq) Reset()         { *m = RelationReq{} }
@@ -1009,9 +1009,9 @@ type RelationWith struct {
 	OtherType            string   `protobuf:"bytes,5,opt,name=otherType,proto3" json:"otherType,omitempty"`
 	State                State    `protobuf:"varint,6,opt,name=state,proto3,enum=obj.State" json:"state,omitempty"`
 	Reversed             bool     `protobuf:"varint,7,opt,name=reversed,proto3" json:"reversed,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *RelationWith) Reset()         { *m = RelationWith{} }
@@ -1090,9 +1090,9 @@ func (m *RelationWith) GetReversed() bool {
 
 type RelationsReq struct {
 	List                 []*RelationWith `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-" bson:"-"`
+	XXX_unrecognized     []byte          `json:"-" bson:"-"`
+	XXX_sizecache        int32           `json:"-" bson:"-"`
 }
 
 func (m *RelationsReq) Reset()         { *m = RelationsReq{} }
@@ -1129,9 +1129,9 @@ func (m *RelationsReq) GetList() []*RelationWith {
 
 type Relations struct {
 	List                 []bool   `protobuf:"varint,1,rep,packed,name=list,proto3" json:"list,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *Relations) Reset()         { *m = Relations{} }
@@ -1168,9 +1168,9 @@ func (m *Relations) GetList() []bool {
 
 type RelationsResp struct {
 	List                 []*Relations `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-" bson:"-"`
+	XXX_unrecognized     []byte       `json:"-" bson:"-"`
+	XXX_sizecache        int32        `json:"-" bson:"-"`
 }
 
 func (m *RelationsResp) Reset()         { *m = RelationsResp{} }
@@ -1213,9 +1213,9 @@ type RelatedReq struct {
 	Reversed             bool     `protobuf:"varint,6,opt,name=reversed,proto3" json:"reversed,omitempty"`
 	Limit                *Limit   `protobuf:"bytes,7,opt,name=limit,proto3" json:"limit,omitempty"`
 	Sort                 *Sort    `protobuf:"bytes,8,opt,name=sort,proto3" json:"sort,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *RelatedReq) Reset()         { *m = RelatedReq{} }
@@ -1295,9 +1295,9 @@ func (m *RelatedReq) GetSort() *Sort {
 type One struct {
 	Type                 string   `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	Obj                  *any.Any `protobuf:"bytes,2,opt,name=obj,proto3" json:"obj,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *One) Reset()         { *m = One{} }
@@ -1343,9 +1343,9 @@ type List struct {
 	List                 []*any.Any `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 	More                 bool       `protobuf:"varint,2,opt,name=more,proto3" json:"more,omitempty"`
 	Type                 string     `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-" bson:"-"`
+	XXX_unrecognized     []byte     `json:"-" bson:"-"`
+	XXX_sizecache        int32      `json:"-" bson:"-"`
 }
 
 func (m *List) Reset()         { *m = List{} }
@@ -1398,9 +1398,9 @@ type IDList struct {
 	List                 []int64  `protobuf:"varint,1,rep,packed,name=list,proto3" json:"list,omitempty"`
 	More                 bool     `protobuf:"varint,2,opt,name=more,proto3" json:"more,omitempty"`
 	Type                 string   `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-" bson:"-"`
+	XXX_unrecognized     []byte   `json:"-" bson:"-"`
+	XXX_sizecache        int32    `json:"-" bson:"-"`
 }
 
 func (m *IDList) Reset()         { *m = IDList{} }
