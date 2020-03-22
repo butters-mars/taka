@@ -494,7 +494,7 @@ func (st *storageImpl) HasRelations(ctx context.Context, rs []storage.HasRelatio
 	ss := st.session.Copy()
 	defer ss.Close()
 
-	for _, r := range rs {
+	for idx, r := range rs {
 		iType, oType, id, oIDs, rel, reversed :=
 			r.Type, r.OtherType, r.ID, r.OtherIDs, r.Relation, r.Reversed
 
@@ -519,10 +519,10 @@ func (st *storageImpl) HasRelations(ctx context.Context, rs []storage.HasRelatio
 
 		hasRelations := make([]bool, len(oIDs))
 		all := make([]*relation, 0)
-		err := q.All(all)
+		err := q.All(&all)
 		if err != nil {
 			logging.WError("fail to check relations", "itype", iType, "otype", oType, "err", err)
-			result = append(result, hasRelations)
+			result[idx] = hasRelations
 			continue
 		}
 
@@ -535,7 +535,7 @@ func (st *storageImpl) HasRelations(ctx context.Context, rs []storage.HasRelatio
 			i := idMap[id]
 			hasRelations[i] = true
 		}
-		result = append(result, hasRelations)
+		result[idx] = hasRelations
 	}
 
 	return result, nil
