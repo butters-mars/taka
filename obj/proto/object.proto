@@ -76,16 +76,6 @@ message Count {
     map<string, int64> counts = 1;
 }
 
-message Resource {
-    int64 id = 1 [(tagger.tags) = "bson:\"_id\"" ];
-    int64 ct = 2;
-    int64 ut = 3;
-    int32 state = 4;
-    string type = 5;
-    map<string, string> meta = 6;
-    map<string, string> urls = 7;
-}
-
 message IDReq {
     int64 id = 1;
     string type = 2;
