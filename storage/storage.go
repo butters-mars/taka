@@ -3,12 +3,12 @@ package storage
 import "context"
 
 // Model defines model to be stored
-type Model interface {
-	GetId() int64
-	GetCt() int64
-	GetUt() int64
-	GetState() int32
-}
+// type Model interface {
+// 	GetId() int64
+// 	GetCt() int64
+// 	GetUt() int64
+// 	GetState() int32
+// }
 
 // Op defines comparison operators
 type Op int
@@ -81,6 +81,7 @@ type Update struct {
 	Value  interface{}
 }
 
+// Relation -
 type Relation struct {
 	Type     string
 	ToType   string
@@ -89,6 +90,7 @@ type Relation struct {
 	Relation string
 }
 
+// HasRelation -
 type HasRelation struct {
 	Type      string
 	OtherType string
@@ -100,7 +102,7 @@ type HasRelation struct {
 
 // Service defines methods of a storage
 type Service interface {
-	Create(ctx context.Context, typ string, m Model) error
+	Create(ctx context.Context, typ string, m interface{}) error
 	Update(ctx context.Context, typ string, q Query, updates []Update) error
 	GetByID(ctx context.Context, typ string, id int64, out interface{}) error
 	GetByIDs(ctx context.Context, typ string, ids []int64, out interface{}) error

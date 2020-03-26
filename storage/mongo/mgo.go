@@ -1,5 +1,6 @@
 package mongo
 
+/*
 import (
 	"context"
 	"fmt"
@@ -55,7 +56,7 @@ func NewStorage(url string) (storage.Service, error) {
 	}, nil
 }
 
-func (st *storageImpl) Create(ctx context.Context, typ string, m storage.Model) error {
+func (st *storageImpl) Create(ctx context.Context, typ string, m interface{}) error {
 	ss := st.session.Copy()
 	defer ss.Close()
 
@@ -584,3 +585,4 @@ func buildQuery(qs []storage.Query) bson.M {
 
 	return qry
 }
+*/
