@@ -97,7 +97,7 @@ message StateReq {
 }
 
 message UpdateReq {
-    Query query = 1;
+    repeated Query queries = 1;
     repeated Update updates = 2;
     string type = 3;
 }
