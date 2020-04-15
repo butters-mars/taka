@@ -23,6 +23,7 @@ enum Op {
     Le = 4;
     Ne = 5;
     In = 6;
+    Contains = 7;
 }
 
 enum UpdateAction {

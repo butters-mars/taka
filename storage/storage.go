@@ -28,6 +28,8 @@ const (
 	Ne
 	// In array contains
 	In
+	// Contains -
+	Contains
 )
 
 // UpdateAction defines update actions
@@ -101,7 +103,7 @@ type HasRelation struct {
 // Service defines methods of a storage
 type Service interface {
 	Create(ctx context.Context, typ string, m Model) error
-	Update(ctx context.Context, typ string, q Query, updates []Update) error
+	Update(ctx context.Context, typ string, queries []Query, updates []Update) error
 	GetByID(ctx context.Context, typ string, id int64, out interface{}) error
 	GetByIDs(ctx context.Context, typ string, ids []int64, out interface{}) error
 	GetOneByQuery(ctx context.Context, typ string, qs []Query, obj interface{}) error

@@ -1,22 +1,6 @@
 package mongo
 
-import (
-	"context"
-	"fmt"
-	"reflect"
-	"strings"
-	"sync"
-	"time"
-
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
-
-	"github.com/butters-mars/tiki/logging"
-
-	"github.com/butters-mars/taka/idgen"
-	"github.com/butters-mars/taka/storage"
-)
-
+/*
 const (
 	fieldCTime        = "Ct"
 	fieldUTime        = "Ut"
@@ -584,3 +568,4 @@ func buildQuery(qs []storage.Query) bson.M {
 
 	return qry
 }
+*/
